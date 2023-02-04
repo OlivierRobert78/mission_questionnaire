@@ -26,7 +26,7 @@ class Question:
         self.choix = choix
         self.bonne_reponse = bonne_reponse
 
-    def FromJsonData(data):
+    def from_json_data(data):
         choix = [i[0] for i in data["choix"]]
         bonne_reponse = [i[0] for i in data["choix"] if i[1] == True]
         if len(bonne_reponse) != 1:
@@ -65,11 +65,29 @@ class Question:
         return Question.demander_reponse_numerique_utlisateur(min, max)
     
 class Questionnaire:
-    def __init__(self, questions):
+    def __init__(self, questions, categorie, titre, difficulte):
         self.questions = questions
+        self.categorie = categorie
+        self.titre = titre
+        self.difficulte = difficulte
+        
+    def from_json_data(data):
+        questionnaire_data_questions = questionnaire_data["questions"]
+        questions = [Question.from_json_data(i) for i in questionnaire_data_questions]
+
+        return Questionnaire(questions, data["categorie"], data["titre"], data["difficulte"])    
 
     def lancer(self):
         score = 0
+        
+        print("---------")
+        print("QUESTIONNAIRE : " + self.titre)
+        print("   Catégorie : " + self.categorie)
+        print("   Difficulté : " + self.difficulte)
+        print("   Nombre de questions : " + str(len(self.questions)))
+        print("---------")
+        
+        
         for question in self.questions:
             if question.poser():
                 score += 1
@@ -107,9 +125,11 @@ json_data = file.read()
 file.close()
 questionnaire_data = json.loads(json_data)
 
-questionnaire_data_questions = questionnaire_data["questions"]
-q = Question.FromJsonData(questionnaire_data_questions[0])
-q.poser()
+
+Questionnaire.from_json_data(questionnaire_data).lancer()
+
+
+
 
 print()
 
