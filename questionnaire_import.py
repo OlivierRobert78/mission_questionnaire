@@ -53,9 +53,6 @@ def generate_json_file(categorie, titre, url):
             print(f"Exception dans la désérialisation ou l'utiisation des données questionnaire : {titre}, url : {url} ")
             
 
-        
-
-
 for quizz_data in open_quizz_db_data:
     generate_json_file(quizz_data[0], quizz_data[1], quizz_data[2])
 
